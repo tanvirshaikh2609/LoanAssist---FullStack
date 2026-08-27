@@ -94,9 +94,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ.get('DATABASE_URL', '').strip()
 DB_ENGINE = os.environ.get('DB_ENGINE', '').lower()
 USE_SQLITE = os.environ.get('USE_SQLITE', 'true').lower() in ('true', '1', 'yes', 't')
+IS_VERCEL = bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV'))
 
 if DATABASE_URL:
     DATABASES = {
@@ -107,10 +108,11 @@ if DATABASE_URL:
         )
     }
 elif DB_ENGINE == 'sqlite' or USE_SQLITE:
+    sqlite_db_path = Path('/tmp/db.sqlite3') if IS_VERCEL else (BASE_DIR / 'db.sqlite3')
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': sqlite_db_path,
         }
     }
 else:
