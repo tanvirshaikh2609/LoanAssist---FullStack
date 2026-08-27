@@ -27,11 +27,36 @@
       "dest": "backend/core/wsgi.py"
     },
     {
-      "handle": "filesystem"
+      "src": "/assets/(.*)",
+      "dest": "frontend/assets/$1"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "frontend/favicon.svg"
+    },
+    {
+      "src": "/icons.svg",
+      "dest": "frontend/icons.svg"
+    },
+    {
+      "src": "/hero-nature.jpg",
+      "dest": "frontend/hero-nature.jpg"
+    },
+    {
+      "src": "/loanassist-logo.jpg",
+      "dest": "frontend/loanassist-logo.jpg"
+    },
+    {
+      "src": "/loanassist-logo.png",
+      "dest": "frontend/loanassist-logo.png"
+    },
+    {
+      "src": "/(.*\\.(?:js|css|ico|png|jpg|jpeg|svg|webp|woff|woff2|ttf|json|txt))",
+      "dest": "frontend/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "frontend/index.html"
     }
   ]
 }
