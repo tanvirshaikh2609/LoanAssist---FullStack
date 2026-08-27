@@ -26,6 +26,7 @@ def health_check(request):
     return JsonResponse({"status": "healthy", "message": "LoanAssist API is running."})
 
 urlpatterns = [
+    path('', health_check, name='root_health_check'),
     path('admin/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
     path('api/auth/', include('users.urls')),

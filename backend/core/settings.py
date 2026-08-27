@@ -22,22 +22,22 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    'SECRET_KEY',
-    'django-insecure-bebqeg9i2ukwxrd)gg@shn=s=2ga3%(0(5)yzy_e7jx*y#@ktn'
+SECRET_KEY = (
+    os.environ.get('SECRET_KEY', '').strip()
+    or 'django-insecure-bebqeg9i2ukwxrd)gg@shn=s=2ga3%(0(5)yzy_e7jx*y#@ktn'
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes', 't')
 
 # Parse comma-separated ALLOWED_HOSTS
-env_allowed_hosts = os.environ.get('ALLOWED_HOSTS', '')
+env_allowed_hosts = os.environ.get('ALLOWED_HOSTS', '').strip()
 if env_allowed_hosts:
     ALLOWED_HOSTS = [host.strip() for host in env_allowed_hosts.split(',') if host.strip()]
 elif DEBUG:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '*']
 else:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app', '.now.sh', '*']
 
 
 # Application definition
@@ -162,7 +162,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 
 # CORS Configuration
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', str(DEBUG)).lower() in ('true', '1', 'yes', 't')
@@ -190,7 +199,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'SIGNING_KEY': os.environ.get('JWT_SECRET_KEY', SECRET_KEY),
+    'SIGNING_KEY': os.environ.get('JWT_SECRET_KEY', '').strip() or SECRET_KEY,
 }
 
 # Custom User Model
