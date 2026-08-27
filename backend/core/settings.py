@@ -105,6 +105,7 @@ if DATABASE_URL:
             default=DATABASE_URL,
             conn_max_age=600,
             conn_health_checks=True,
+            ssl_require=bool('sslmode=require' in DATABASE_URL or not DEBUG),
         )
     }
 elif DB_ENGINE == 'sqlite' or USE_SQLITE:
